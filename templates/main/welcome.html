@@ -8,10 +8,15 @@
         <form method="post" class="lg:w-1/4 px-4 mx-auto">
             {% csrf_token %}
             <div class="mb-3">
-                <label class="text-white text-center">City name</label>
-                <input type="text" name="city" class="w-full mt-2 px-4 py-2 rounded-xl">
+                <label class="text-white text-center">Joy nomi</label>
+                <input id="cityName" type="text" name="city" class="w-full mt-2 px-4 py-2 rounded-xl" list="cityNames"/>
+                <datalist id="cityNames" class="text-bold">
+
+                </datalist>
             </div>
-            <button class="px-10 w-full py-3 rounded-xl text-white bg-teal-800 hover:bg-teal-700">Yuborish</button>
+            <button id="submitBtn" class="px-10 w-full py-3 rounded-xl text-white bg-teal-800 hover:bg-teal-700">
+                Yuborish
+            </button>
         </form>
     </div>
 
@@ -21,13 +26,11 @@
                 <div class="max-w-sm w-full lg:max-w-full shadow px-6 py-6 bg-white rounded-lg mb-6">
                     <div class="mb-10">
                         <p class="text-3xl font-semibold text-gray-500">
-                            {{ status_code }}
+                            {{ city }}
                         </p>
-
                         <p class="text-xl font-normal text-gray-500">
-                            {{ data.error.message }}
+                            Mos joy topilmadi.
                         </p>
-
                     </div>
                 </div>
             </div>
@@ -51,7 +54,7 @@
                     <div class="flex mb-8">
                         <div class="w-2/4 flex ">
                             <div class="flex-no-shring mr-5">
-                                <img src="{{ data.current.condition.icon }}" width="100">
+                                <img src="{{ data.current.condition.icon }}" width="100" alt="Icon">
                             </div>
                             <div class="w-full text-6xl relative">
                                 {{ data.current.temp_c }}
@@ -79,5 +82,26 @@
         </div>
     {% endif %}
 
-    
+    <script>
+        const input = document.getElementById("cityName");
+        const dataList = document.getElementById("cityNames");
+
+        input.addEventListener("keypress", (e) => {
+            fetch(
+                "https://api.weatherapi.com/v1/search.json?key=93e7b2612c5d436897652816243006&q=" +
+                input.value
+            ).then((response) => response.json()).then((data) => addOptions(data));
+        });
+
+        const addOptions = function (arr) {
+            dataList.innerHTML = "";
+            let html = "";
+            arr.map((e) => {
+                html = html + `<option value="${e.name}">${e.name} - ${e.region} </option>`;
+            });
+            dataList.insertAdjacentHTML("beforeend", html);
+        };
+    </script>
+
+
 {% endblock %}

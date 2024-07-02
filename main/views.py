@@ -15,7 +15,8 @@ def welcome(request):
     if data.status_code == 400:
         context = {
             'status_code': 400,
-            'data': data.json()
+            'data': data.json(),
+            'city': city,
         }
         return render(request, 'main/welcome.html', context)
     code = data.json()['current']['condition']['code']
