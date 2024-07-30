@@ -2,10 +2,13 @@ from django.shortcuts import render
 import requests
 from django.http import JsonResponse, HttpResponse
 from .models import Condition
+from dotenv import load_dotenv
+import os
+load_dotenv('.env')
 
 
 def welcome(request):
-    url = 'https://api.weatherapi.com/v1/current.json?key=93e7b2612c5d436897652816243006&q='
+    url = f'https://api.weatherapi.com/v1/current.json?key={os.getenv("API_KEY")}&q='
 
     if request.method == 'POST':
         city = request.POST.get('city')
@@ -44,7 +47,7 @@ def condition_add(request):
 
 def search_city(request):
     name = request.GET.get('q')
-    url = 'https://api.weatherapi.com/v1/search.json?key=93e7b2612c5d436897652816243006&q='
+    url = f"https://api.weatherapi.com/v1/search.json?key={os.getenv('API_KEY')}&q="
     data = requests.get(url + str(name))
     context = {
         'data': data.json(),
